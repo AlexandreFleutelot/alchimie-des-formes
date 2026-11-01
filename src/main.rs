@@ -1,14 +1,14 @@
 use bevy::asset::AssetMetaCheck;
 use bevy::prelude::*;
 
+mod game;
+mod input;
 mod logic;
 mod render;
-mod input;
-mod game;
 
-use render::RenderPlugin;
-use input::InputPlugin;
 use game::GamePlugin;
+use input::InputPlugin;
+use render::RenderPlugin;
 
 fn main() {
     App::new()

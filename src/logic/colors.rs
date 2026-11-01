@@ -1,40 +1,39 @@
-
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(u8)]
 pub enum Color {
-  #[default]
-  Empty = 0b000,
-  Rouge = 0b001,
-  Jaune = 0b010,
-  Bleu = 0b100,
-  Orange = 0b011,
-  Vert = 0b110,
-  Violet = 0b101,
-  Brun = 0b111,
+    #[default]
+    Empty = 0b000,
+    Rouge = 0b001,
+    Jaune = 0b010,
+    Bleu = 0b100,
+    Orange = 0b011,
+    Vert = 0b110,
+    Violet = 0b101,
+    Brun = 0b111,
 }
 
 impl Color {
-
-  fn get_bits(self) -> u8 {self as u8}
-
-  fn from_bits(bits: u8) -> Color {
-    match bits {
-      0b000 => Color::Empty,
-      0b001 => Color::Rouge,
-      0b010 => Color::Jaune,
-      0b100 => Color::Bleu,
-      0b011 => Color::Orange,
-      0b110 => Color::Vert,
-      0b101 => Color::Violet,
-      0b111 => Color::Brun,
-      _ => panic!("Invalid bits for Color: {}", bits),
+    fn get_bits(self) -> u8 {
+        self as u8
     }
-  }
-  
-  fn mix(&self, other: &Color) -> Color {
-    Color::from_bits(self.get_bits() | other.get_bits())
-  }
+
+    fn from_bits(bits: u8) -> Color {
+        match bits {
+            0b000 => Color::Empty,
+            0b001 => Color::Rouge,
+            0b010 => Color::Jaune,
+            0b100 => Color::Bleu,
+            0b011 => Color::Orange,
+            0b110 => Color::Vert,
+            0b101 => Color::Violet,
+            0b111 => Color::Brun,
+            _ => panic!("Invalid bits for Color: {}", bits),
+        }
+    }
+
+    fn mix(&self, other: &Color) -> Color {
+        Color::from_bits(self.get_bits() | other.get_bits())
+    }
 }
 
 #[cfg(test)]
