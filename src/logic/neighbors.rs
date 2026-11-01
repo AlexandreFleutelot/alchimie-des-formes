@@ -1,5 +1,4 @@
-use super::grid::Direction;
-use super::grid::Grid;
+use super::grid::{Direction, Grid};
 
 impl Grid {
     pub fn get_neighbors(
