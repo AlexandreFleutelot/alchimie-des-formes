@@ -1,8 +1,9 @@
 
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(u8)]
-enum Color {
+pub enum Color {
+  #[default]
   Empty = 0b000,
   Rouge = 0b001,
   Jaune = 0b010,
