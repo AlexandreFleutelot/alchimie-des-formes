@@ -44,3 +44,30 @@ impl Grid {
         neighbors
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_neighbors() {
+        let grid = Grid::new(10, 10);
+        let neighbors = grid.get_neighbors(5, 5, Direction::Nord);
+        let target_neighbors = vec![
+            (5, 5, Direction::Est),
+            (5, 5, Direction::Ouest),
+            (5, 4, Direction::Sud),
+        ];
+        assert_eq!(neighbors.len(), 3);
+        assert_eq!(neighbors, target_neighbors);
+    }
+
+    #[test]
+    fn test_get_neighbors_edge() {
+        let grid = Grid::new(10, 10);
+        let neighbors = grid.get_neighbors(0, 0, Direction::Ouest);
+        let target_neighbors = vec![(0, 0, Direction::Nord), (0, 0, Direction::Sud)];
+        assert_eq!(neighbors.len(), 2);
+        assert_eq!(neighbors, target_neighbors);
+    }
+}
