@@ -31,7 +31,7 @@ impl Color {
         }
     }
 
-    fn mix(&self, other: &Color) -> Color {
+    pub fn mix(&self, other: &Color) -> Color {
         Color::from_bits(self.get_bits() | other.get_bits())
     }
 }

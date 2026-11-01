@@ -18,6 +18,7 @@ impl Direction {
     ];
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Grid {
     pub width: usize,
     pub height: usize,
