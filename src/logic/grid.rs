@@ -17,13 +17,22 @@ impl Grid {
             cells: vec![Color::Empty; width * height],
         }
     }
+    
+    pub fn check_bounds(&self, x: usize, y: usize) -> bool {
+        x < self.width && y < self.height
+    }
 
-    pub fn get_cell(&self, x: usize, y: usize) -> Color {
-        self.cells[y * self.width + x]
+    pub fn get_cell(&self, x: usize, y: usize) -> Option<Color> {
+        if self.check_bounds(x, y) {
+            Some(self.cells[y * self.width + x])
+        } else {
+            None
+        }
     }
 
     pub fn set_cell(&mut self, x: usize, y: usize, value: Color) {
-        self.cells[y * self.width + x] = value;
+      assert!(self.check_bounds(x, y), "case ({x},{y}) hors grille");
+      self.cells[y * self.width + x] = value;
     }
 }
 
@@ -42,13 +51,26 @@ mod tests {
     #[test]
     fn test_get_cell() {
         let grid = Grid::new(10, 10);
-        assert_eq!(grid.get_cell(5, 5), Color::Empty);
+        assert_eq!(grid.get_cell(5, 5), Some(Color::Empty));
     }
 
     #[test]
     fn test_set_cell() {
         let mut grid = Grid::new(10, 10);
         grid.set_cell(5, 5, Color::Rouge);
-        assert_eq!(grid.get_cell(5, 5), Color::Rouge);
+        assert_eq!(grid.get_cell(5, 5), Some(Color::Rouge));
+    }
+
+    #[test]
+    #[should_panic(expected = "case (10,10) hors grille")]
+    fn test_set_cell_out_of_bounds() {
+        let mut grid = Grid::new(10, 10);
+        grid.set_cell(10, 10, Color::Rouge);  
+    }
+
+    #[test]
+    fn test_get_cell_out_of_bounds() {
+        let grid = Grid::new(10, 10);
+        assert_eq!(grid.get_cell(10, 10), None);
     }
 }
