@@ -41,9 +41,13 @@ impl Grid {
         x < self.width && y < self.height
     }
 
+    pub fn get_index(&self, x: usize, y: usize, dir: Direction) -> usize {
+        4 * (y * self.width + x) + dir as usize
+    }
+
     pub fn get(&self, x: usize, y: usize, dir: Direction) -> Option<Color> {
         if self.check_bounds(x, y) {
-            Some(self.cells[4 * (y * self.width + x) + dir as usize])
+            Some(self.cells[self.get_index(x, y, dir)])
         } else {
             None
         }
@@ -51,7 +55,8 @@ impl Grid {
 
     pub fn set(&mut self, x: usize, y: usize, dir: Direction, value: Color) {
         assert!(self.check_bounds(x, y), "case ({x},{y}) hors grille");
-        self.cells[4 * (y * self.width + x) + dir as usize] = value;
+        let index = self.get_index(x, y, dir);
+        self.cells[index] = value;
     }
 }
 

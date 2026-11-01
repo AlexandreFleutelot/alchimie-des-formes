@@ -10,7 +10,7 @@ impl Grid {
         y: usize,
         quarter: Direction,
     ) -> Vec<(usize, usize, Direction)> {
-        let mut visited = vec![false; self.width * self.height * 4];
+        let mut visited = vec![false; self.cells.len()];
         let mut piece = Vec::<(usize, usize, Direction)>::new();
         let mut queue = VecDeque::new();
 
@@ -22,15 +22,15 @@ impl Grid {
         }
         queue.push_back((x, y, quarter));
         while let Some((cx, cy, cquarter)) = queue.pop_front() {
-            if visited[(cy * self.width + cx) * 4 + cquarter as usize] {
+            if visited[self.get_index(cx, cy, cquarter)] {
                 continue;
             }
-            visited[(cy * self.width + cx) * 4 + cquarter as usize] = true;
+            visited[self.get_index(cx, cy, cquarter)] = true;
             piece.push((cx, cy, cquarter));
 
             let neighbors = self.get_neighbors(cx, cy, cquarter);
             for (nx, ny, dir) in neighbors {
-                if !visited[(ny * self.width + nx) * 4 + dir as usize]
+                if !visited[self.get_index(nx, ny, dir)]
                     && self.get(nx, ny, dir) == Some(piece_color)
                 {
                     queue.push_back((nx, ny, dir));
