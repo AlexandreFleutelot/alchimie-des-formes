@@ -17,6 +17,10 @@ pub struct Grid {
 
 impl Grid {
     pub fn new(width: usize, height: usize) -> Grid {
+        assert!(
+            width > 0 && height > 0,
+            "La largeur et la hauteur de la grille doivent être supérieures à zéro"
+        );
         Grid {
             width,
             height,
