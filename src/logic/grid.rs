@@ -97,4 +97,9 @@ mod tests {
         let grid = Grid::new(10, 10);
         assert_eq!(grid.get(10, 10, Direction::Sud), None);
     }
+    #[test]
+    fn test_get_index() {
+        let grid = Grid::new(10, 10);
+        assert_eq!(grid.get_index(0, 0, Direction::Nord), 0);
+    }
 }
