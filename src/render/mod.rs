@@ -9,7 +9,7 @@ impl Plugin for RenderPlugin {
     }
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(mut commands: Commands) {
     commands.spawn(Camera2d);
     commands.spawn(
       (Sprite::from_color(Color::srgb(0.2, 0.8, 0.3), 
