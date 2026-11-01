@@ -70,4 +70,24 @@ mod tests {
         assert_eq!(neighbors.len(), 2);
         assert_eq!(neighbors, target_neighbors);
     }
+
+    #[test]
+    fn test_grid_coherency() {
+        let grid = Grid::new(5, 5);
+
+        for x in 0..grid.width {
+            for y in 0..grid.height {
+                for quarter in Direction::ALL {
+                    let neighbors = grid.get_neighbors(x, y, quarter);
+                    for (nx, ny, nquarter) in neighbors {
+                        let neighbor_neighbors = grid.get_neighbors(nx, ny, nquarter);
+                        assert!(
+                            neighbor_neighbors.contains(&(x, y, quarter)),
+                            "Neighbor ({nx},{ny},{nquarter:?}) does not have ({x},{y},{quarter:?}) as a neighbor"
+                        );
+                    }
+                }
+            }
+        }
+    }
 }

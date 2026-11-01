@@ -9,6 +9,15 @@ pub enum Direction {
     Ouest,
 }
 
+impl Direction {
+    pub const ALL: [Direction; 4] = [
+        Direction::Nord,
+        Direction::Est,
+        Direction::Sud,
+        Direction::Ouest,
+    ];
+}
+
 pub struct Grid {
     pub width: usize,
     pub height: usize,
