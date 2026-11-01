@@ -1,6 +1,14 @@
 use bevy::asset::AssetMetaCheck;
 use bevy::prelude::*;
 
+mod render;
+mod input;
+mod game;
+
+use render::RenderPlugin;
+use input::InputPlugin;
+use game::GamePlugin;
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(AssetPlugin {
@@ -10,14 +18,6 @@ fn main() {
             meta_check: AssetMetaCheck::Never,
             ..default()
         }))
-        .add_systems(Startup, setup)
+        .add_plugins((InputPlugin, RenderPlugin, GamePlugin))
         .run();
-}
-
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(Camera2d);
-    commands.spawn(Sprite {
-        image: asset_server.load("ducky.png"),
-        ..Default::default()
-    });
 }
