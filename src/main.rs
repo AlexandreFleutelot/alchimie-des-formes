@@ -1,6 +1,7 @@
 use bevy::asset::AssetMetaCheck;
 use bevy::prelude::*;
 
+mod logic;
 mod render;
 mod input;
 mod game;
