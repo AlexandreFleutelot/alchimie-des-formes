@@ -14,6 +14,12 @@ fn move_piece(grid: &Grid, x: usize, y: usize, q:Direction, m:Movement) -> Optio
     let mut new_grid = grid.clone();
     let shape = grid.get_piece(x, y, q);
 
+    //Check for no shape selected
+    if grid.get(x,y,q) == Some(Color::Empty) { return None };
+
+    //Check selection outside of grid
+    if !grid.check_bounds(x,y) { return None };
+
     // Check move possible and get target cells
     let mut targets = Vec::new();
     for &(sx, sy, dir) in &shape {
@@ -59,7 +65,11 @@ mod tests {
 
     #[test]
     fn test_movement_with_empty_start() {
-    todo!()
+        let mut src = Grid::new(10, 10);
+        src.set(5,5,Direction::Nord, Color::Bleu);
+        let movement = Movement {dx:1, dy:2};
+        let dst = move_piece(&src, 6,5,Direction::Nord, movement);
+        assert_eq!(dst,None);
     }
 
     #[test]
@@ -99,7 +109,14 @@ mod tests {
 
     #[test]
     fn test_movement_with_overlap() {
-        todo!()
+        let mut src_grid = Grid::new(5,5);
+        add_square(&mut src_grid, 1,1,2, Color::Bleu);
+
+        let mut expected_grid = Grid::new(5,5);
+        add_square(&mut expected_grid, 2,2,2, Color::Bleu);
+
+        let out_grid = move_piece(&src_grid, 1,1,Direction::Nord,Movement {dx:1, dy:1});
+        assert_eq!(out_grid,Some(expected_grid));
     }
 
     #[test]
@@ -119,7 +136,19 @@ mod tests {
 
     #[test]
     fn test_movement_with_diagonal_piece() {
-        todo!()
+        let mut src_grid = Grid::new(3,3);
+        add_square(&mut src_grid,1,1,1, Color::Bleu);
+        src_grid.set(2,1,Direction::Est,Color::Jaune);
+        src_grid.set(2,1,Direction::Sud,Color::Jaune);
+
+        let mut expected_grid = Grid::new(3,3);
+        add_square(&mut expected_grid,1,1,1, Color::Bleu);
+        expected_grid.set(1,1,Direction::Est,Color::Vert);
+        expected_grid.set(1,1,Direction::Sud,Color::Vert);
+
+        let out_grid = move_piece(&src_grid, 2,1,Direction::Sud, Movement {dx:-1,dy:0});
+        assert_eq!(out_grid, Some(expected_grid));
+
     }
 
 }
