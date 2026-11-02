@@ -7,7 +7,7 @@ pub struct Movement {
     dy: i32,
 }
 
-fn move_piece(grid: &Grid, pos: QPos, m: Movement) -> Option<Grid> {
+pub fn move_piece(grid: &Grid, pos: QPos, m: Movement) -> Option<Grid> {
     let mut new_grid = grid.clone();
     let shape = grid.get_piece(pos);
 
