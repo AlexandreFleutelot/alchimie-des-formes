@@ -14,13 +14,16 @@ fn move_piece(grid: &Grid, x: usize, y: usize, q:Direction, m:Movement) -> Optio
     let mut new_grid = grid.clone();
     let shape = grid.get_piece(x, y, q);
 
-    // Check move possible
-    let targets= shape.iter()
-        .map(|&(sx,sy,dir)| {
-            let tx =usize::try_from(sx as i32 + m.dx).ok()?;
-            let ty = usize::try_from(sy as i32 + m.dy).ok()?;
-            Some((tx, ty, dir))
-        }).collect::<Option<Vec<(usize, usize, Direction)>>>()?;
+    // Check move possible and get target cells
+    let mut targets = Vec::new();
+    for &(sx, sy, dir) in &shape {
+        let tx = usize::try_from(sx as i32 + m.dx).ok()?;
+        let ty = usize::try_from(sy as i32 + m.dy).ok()?;
+        if !grid.check_bounds(tx, ty) {
+            return None;
+        }
+        targets.push((tx, ty, dir));
+    }
 
     // Clean position initale
     for &(sx, sy, dir) in &shape {
@@ -44,6 +47,21 @@ mod tests {
     use crate::logic::fission::{move_piece, Movement};
     use crate::logic::grid::{Direction, Grid};
 
+    fn add_square(grid: &mut Grid, startx: usize, starty:usize, size:usize, color:Color) {
+        for i in 0..size {
+            for j in 0..size {
+                for dir in Direction::ALL {
+                    grid.set(startx+i,starty+j,dir, color);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn test_movement_with_empty_start() {
+    todo!()
+    }
+
     #[test]
     fn test_movement_nul() {
         let mut src = Grid::new(10, 10);
@@ -55,16 +73,53 @@ mod tests {
 
     #[test]
     fn test_movement_outside() {
+        let mut src_grid = Grid::new(5,5);
+        add_square(&mut src_grid, 2,2,2, Color::Bleu);
+        let out_grid = move_piece(&src_grid, 3,3,Direction::Nord,Movement {dx:2, dy:1});
+        assert_eq!(out_grid,None);
+        let out_grid = move_piece(&src_grid, 3,3,Direction::Nord,Movement {dx:-3, dy:1});
+        assert_eq!(out_grid,None);
+        let out_grid = move_piece(&src_grid, 2,2,Direction::Ouest,Movement {dx:1, dy:2});
+        assert_eq!(out_grid,None);
+        let out_grid = move_piece(&src_grid, 3,3,Direction::Nord,Movement {dx:2, dy:-3});
+        assert_eq!(out_grid,None);
+    }
+
+    #[test]
+    fn test_movement_to_empty_area() {
+        let mut src_grid = Grid::new(5,5);
+        add_square(&mut src_grid, 1,1,2, Color::Bleu);
+
+        let mut expected_grid = Grid::new(5,5);
+        add_square(&mut expected_grid, 3,3,2, Color::Bleu);
+
+        let out_grid = move_piece(&src_grid, 1,1,Direction::Nord,Movement {dx:2, dy:2});
+        assert_eq!(out_grid,Some(expected_grid));
+    }
+
+    #[test]
+    fn test_movement_with_overlap() {
         todo!()
     }
 
     #[test]
-    fn test_movement_empty_area() {
+    fn test_movement_with_fission() {
+        let mut src_grid = Grid::new(5,5);
+        add_square(&mut src_grid, 1,1,2, Color::Bleu);
+        add_square(&mut src_grid, 3,3,2, Color::Rouge);
 
+        let mut expected_grid = Grid::new(5,5);
+        add_square(&mut expected_grid, 2,2,2, Color::Bleu);
+        add_square(&mut expected_grid, 3,3,2, Color::Rouge);
+        add_square(&mut expected_grid, 3,3,1, Color::Violet);
+
+        let out_grid = move_piece(&src_grid, 1,1,Direction::Nord,Movement {dx:1, dy:1});
+        assert_eq!(out_grid,Some(expected_grid));
     }
 
     #[test]
-    fn test_movement_with_fission() {
-
+    fn test_movement_with_diagonal_piece() {
+        todo!()
     }
+
 }
