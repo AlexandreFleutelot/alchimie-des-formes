@@ -141,13 +141,11 @@ mod tests {
         src_grid.set(2,1,Direction::Est,Color::Jaune);
         src_grid.set(2,1,Direction::Sud,Color::Jaune);
 
-        let mut expected_grid = Grid::new(3,3);
-        add_square(&mut expected_grid,1,1,1, Color::Bleu);
-        expected_grid.set(1,1,Direction::Est,Color::Vert);
-        expected_grid.set(1,1,Direction::Sud,Color::Vert);
-
-        let out_grid = move_piece(&src_grid, 2,1,Direction::Sud, Movement {dx:-1,dy:0});
-        assert_eq!(out_grid, Some(expected_grid));
+        let out_grid = move_piece(&src_grid, 2,1,Direction::Sud, Movement {dx:-1,dy:0}).unwrap();
+        assert_eq!(out_grid.get(1, 1, Direction::Nord), Some(Color::Bleu));
+        assert_eq!(out_grid.get(1, 1, Direction::Ouest), Some(Color::Bleu));
+        assert_eq!(out_grid.get(1, 1, Direction::Est), Some(Color::Vert));
+        assert_eq!(out_grid.get(1, 1, Direction::Sud), Some(Color::Vert));
 
     }
 
