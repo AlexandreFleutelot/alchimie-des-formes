@@ -10,8 +10,8 @@ pub enum MoveError {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Movement {
-    dx: i32,
-    dy: i32,
+    pub(crate) dx: i32,
+    pub(crate) dy: i32,
 }
 
 pub fn move_piece(grid: &Grid, pos: QPos, m: Movement) -> Result<Grid, MoveError> {
@@ -56,7 +56,6 @@ mod tests {
     use crate::logic::colors::QColor;
     use crate::logic::fission::{MoveError, Movement, move_piece};
     use crate::logic::grid::{Grid, QPos, Quarter};
-    use bevy::window::SystemCursorIcon::Move;
 
     fn add_square(grid: &mut Grid, startx: usize, starty: usize, size: usize, color: QColor) {
         for i in 0..size {
