@@ -1,33 +1,36 @@
 use super::grid::{Grid, QPos};
 use crate::logic::colors::QColor;
 
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub enum MoveError {
+    NoShapeSelected,
+    SelectionOutOfGrid,
+    TargetOutOfGrid,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Movement {
     dx: i32,
     dy: i32,
 }
 
-pub fn move_piece(grid: &Grid, pos: QPos, m: Movement) -> Option<Grid> {
+pub fn move_piece(grid: &Grid, pos: QPos, m: Movement) -> Result<Grid, MoveError> {
     let mut new_grid = grid.clone();
     let shape = grid.get_piece(pos);
 
-    //Check for no shape selected
-    if grid.get(pos) == Some(QColor::Empty) {
-        return None;
-    };
-
-    //Check selection outside of grid
-    if !grid.check_bounds(pos.x, pos.y) {
-        return None;
-    };
+    match grid.get(pos) {
+        None => Err(MoveError::SelectionOutOfGrid),
+        Some(QColor::Empty) => Err(MoveError::NoShapeSelected),
+        Some(c) => Ok(c),
+    }?;
 
     // Check move possible and get target cells
     let mut targets = Vec::new();
     for &s_pos in &shape {
-        let tx = usize::try_from(s_pos.x as i32 + m.dx).ok()?;
-        let ty = usize::try_from(s_pos.y as i32 + m.dy).ok()?;
+        let tx = usize::try_from(s_pos.x as i32 + m.dx).map_err(|_| MoveError::TargetOutOfGrid)?;
+        let ty = usize::try_from(s_pos.y as i32 + m.dy).map_err(|_| MoveError::TargetOutOfGrid)?;
         if !grid.check_bounds(tx, ty) {
-            return None;
+            return Err(MoveError::TargetOutOfGrid);
         }
         targets.push(QPos::new(tx, ty, s_pos.q));
     }
@@ -39,20 +42,21 @@ pub fn move_piece(grid: &Grid, pos: QPos, m: Movement) -> Option<Grid> {
 
     // Copie a la destinaton
     for (&s_pos, &t_pos) in shape.iter().zip(targets.iter()) {
-        let src_color = grid.get(s_pos)?;
-        let dst_color = new_grid.get(t_pos)?;
+        let src_color = grid.get(s_pos).expect("source control failed");
+        let dst_color = new_grid.get(t_pos).expect("destination control failed");
         let new_color = dst_color.mix(&src_color);
         new_grid.set(t_pos, new_color);
     }
 
-    Some(new_grid)
+    Ok(new_grid)
 }
 
 #[cfg(test)]
 mod tests {
     use crate::logic::colors::QColor;
-    use crate::logic::fission::{Movement, move_piece};
+    use crate::logic::fission::{MoveError, Movement, move_piece};
     use crate::logic::grid::{Grid, QPos, Quarter};
+    use bevy::window::SystemCursorIcon::Move;
 
     fn add_square(grid: &mut Grid, startx: usize, starty: usize, size: usize, color: QColor) {
         for i in 0..size {
@@ -71,7 +75,7 @@ mod tests {
         src.set(QPos::new(5, 5, Quarter::Nord), QColor::Bleu);
         let movement = Movement { dx: 1, dy: 2 };
         let dst = move_piece(&src, QPos::new(6, 5, Quarter::Nord), movement);
-        assert_eq!(dst, None);
+        assert_eq!(dst, Err(MoveError::NoShapeSelected));
     }
 
     #[test]
@@ -80,7 +84,7 @@ mod tests {
         src.set(QPos::new(5, 5, Quarter::Nord), QColor::Bleu);
         let movement = Movement { dx: 0, dy: 0 };
         let dst = move_piece(&src, QPos::new(5, 5, Quarter::Nord), movement);
-        assert_eq!(dst, Some(src));
+        assert_eq!(dst, Ok(src));
     }
 
     #[test]
@@ -92,25 +96,25 @@ mod tests {
             QPos::new(3, 3, Quarter::Nord),
             Movement { dx: 2, dy: 1 },
         );
-        assert_eq!(out_grid, None);
+        assert_eq!(out_grid, Err(MoveError::TargetOutOfGrid));
         let out_grid = move_piece(
             &src_grid,
             QPos::new(3, 3, Quarter::Nord),
             Movement { dx: -3, dy: 1 },
         );
-        assert_eq!(out_grid, None);
+        assert_eq!(out_grid, Err(MoveError::TargetOutOfGrid));
         let out_grid = move_piece(
             &src_grid,
             QPos::new(2, 2, Quarter::Ouest),
             Movement { dx: 1, dy: 2 },
         );
-        assert_eq!(out_grid, None);
+        assert_eq!(out_grid, Err(MoveError::TargetOutOfGrid));
         let out_grid = move_piece(
             &src_grid,
             QPos::new(3, 3, Quarter::Nord),
             Movement { dx: 2, dy: -3 },
         );
-        assert_eq!(out_grid, None);
+        assert_eq!(out_grid, Err(MoveError::TargetOutOfGrid));
     }
 
     #[test]
@@ -126,7 +130,7 @@ mod tests {
             QPos::new(1, 1, Quarter::Nord),
             Movement { dx: 2, dy: 2 },
         );
-        assert_eq!(out_grid, Some(expected_grid));
+        assert_eq!(out_grid, Ok(expected_grid));
     }
 
     #[test]
@@ -142,7 +146,7 @@ mod tests {
             QPos::new(1, 1, Quarter::Nord),
             Movement { dx: 1, dy: 1 },
         );
-        assert_eq!(out_grid, Some(expected_grid));
+        assert_eq!(out_grid, Ok(expected_grid));
     }
 
     #[test]
@@ -161,7 +165,7 @@ mod tests {
             QPos::new(1, 1, Quarter::Nord),
             Movement { dx: 1, dy: 1 },
         );
-        assert_eq!(out_grid, Some(expected_grid));
+        assert_eq!(out_grid, Ok(expected_grid));
     }
 
     #[test]

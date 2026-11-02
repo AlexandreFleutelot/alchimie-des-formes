@@ -1,4 +1,4 @@
-use super::fission::{Movement, move_piece};
+use super::fission::{MoveError, Movement, move_piece};
 use super::grid::{Grid, QPos};
 
 pub struct Session {
@@ -12,13 +12,10 @@ impl Session {
         }
     }
 
-    pub fn play(&mut self, pos: QPos, mov: Movement) -> bool {
-        if let Some(new_grid) = move_piece(self.current(), pos, mov) {
-            self.history.push(new_grid);
-            true
-        } else {
-            false
-        }
+    pub fn play(&mut self, pos: QPos, mov: Movement) -> Result<(), MoveError> {
+        let new_grid = move_piece(self.current(), pos, mov)?;
+        self.history.push(new_grid);
+        Ok(())
     }
 
     pub fn undo(&mut self) -> bool {
