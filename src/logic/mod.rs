@@ -5,3 +5,4 @@ pub mod neighbors;
 pub mod piece;
 pub mod rules;
 pub mod sessions;
+pub mod levels;
