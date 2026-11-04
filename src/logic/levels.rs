@@ -11,9 +11,9 @@ pub enum ParseError {
 
 const QUARTERS: [Quarter; 4] = [Quarter::Nord, Quarter::Est, Quarter::Sud, Quarter::Ouest];
 
-struct Level {
-    start: Grid,
-    target: Grid,
+pub struct Level {
+    pub start: Grid,
+    pub target: Grid,
 }
 
 fn char_to_color(c: char) -> Option<QColor> {
