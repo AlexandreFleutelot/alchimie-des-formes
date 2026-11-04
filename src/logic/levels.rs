@@ -10,7 +10,7 @@ pub enum ParseError {
 const QUARTERS: [Quarter; 4] = [Quarter::Nord, Quarter::Est, Quarter::Sud, Quarter::Ouest];
 
 struct Level {
-    grid: Grid,
+    start: Grid,
     target: Grid,
 }
 
@@ -39,29 +39,47 @@ pub fn parse_cell(cell: &str) -> Result<[QColor; 4], ParseError> {
     Ok(parsed_cell)
 }
 
-impl Level {
-    pub fn parse_grid(text_grid: &str) -> Result<Grid, ParseError> {
-        let level_text = text_grid.trim();
+pub fn parse_grid(text_grid: &str) -> Result<Grid, ParseError> {
+    let level_text = text_grid.trim();
 
-        let height = level_text.lines().count();
-        let width = level_text
-            .lines()
-            .next()
-            .map_or(0, |l| l.split_whitespace().count());
-        let mut grid = Grid::new(width, height);
+    let height = level_text.lines().count();
+    let width = level_text
+        .lines()
+        .next()
+        .map_or(0, |l| l.split_whitespace().count());
+    let mut grid = Grid::new(width, height);
 
-        for (y, ligne) in level_text.lines().enumerate() {
-            if ligne.split_whitespace().count() != width {
-                return Err(ParseError::InvalidFormat);
-            };
-            for (x, cell) in ligne.split_whitespace().enumerate() {
-                let colors = parse_cell(cell)?;
-                for (q, c) in QUARTERS.iter().zip(colors) {
-                    grid.set(QPos::new(x, y, *q), c);
-                }
+    for (y, ligne) in level_text.lines().enumerate() {
+        if ligne.split_whitespace().count() != width {
+            return Err(ParseError::InvalidFormat);
+        };
+        for (x, cell) in ligne.split_whitespace().enumerate() {
+            let colors = parse_cell(cell)?;
+            for (q, c) in QUARTERS.iter().zip(colors) {
+                grid.set(QPos::new(x, y, *q), c);
             }
         }
-        Ok(grid)
+    }
+    Ok(grid)
+}
+
+
+
+impl Level {
+        pub fn new(start_grid:Grid, target_grid:Grid) -> Level {
+            Level {
+                start: start_grid,
+                target: target_grid
+            }
+        }
+    pub fn from_text(start_text:&str, target_text:&str) -> Result<Level, ParseError> {
+
+        let start_grid = parse_grid(start_text)?;
+        let target_grid = parse_grid(target_text)?;
+        Ok(Level {
+            start: start_grid,
+            target: target_grid
+        })
     }
 }
 
@@ -69,7 +87,7 @@ impl Level {
 mod test {
     use crate::logic::colors::QColor;
     use crate::logic::grid::{QPos, Quarter};
-    use crate::logic::levels::{Level, ParseError, ParseError::*, parse_cell};
+    use crate::logic::levels::{ParseError, ParseError::*, parse_cell, parse_grid};
 
     #[test]
     fn test_parse_cell() {
@@ -83,7 +101,7 @@ mod test {
 
     #[test]
     fn test_parse_grid() {
-        let grid = Level::parse_grid("R..B R..B\nR..B R..B").unwrap();
+        let grid = parse_grid("R..B R..B\nR..B R..B").unwrap();
         assert_eq!(
             &grid.get(QPos::new(1, 1, Quarter::Nord)),
             &Some(QColor::Rouge)
@@ -101,7 +119,7 @@ mod test {
     #[test]
     fn test_parse_grid_wrong_width() {
         assert_eq!(
-            Level::parse_grid("R..B R..B\nR..B R..B JJJJ"),
+            parse_grid("R..B R..B\nR..B R..B JJJJ"),
             Err(ParseError::InvalidFormat)
         );
     }
