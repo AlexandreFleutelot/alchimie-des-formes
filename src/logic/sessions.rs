@@ -9,11 +9,11 @@ pub enum SessionError {
 
 pub struct Session {
     history: Vec<Grid>,
-    target: Grid
+    target: Grid,
 }
 
 impl Session {
-    pub fn new(initial: Grid, target:Grid) -> Session {
+    pub fn new(initial: Grid, target: Grid) -> Session {
         Session {
             history: vec![initial],
             target,
@@ -43,7 +43,7 @@ impl Session {
     }
 
     pub fn is_won(&self) -> bool {
-        is_won(self.current(),self.target())
+        is_won(self.current(), self.target())
     }
 }
 
@@ -121,17 +121,14 @@ mod tests {
 
     #[test]
     pub fn test_is_won() {
-        let mut grid1 = Grid::new(3,3);
-        let grid2 = Grid::new(3,3);
-        grid1.set(QPos::new(1,1,Quarter::Nord),QColor::Rouge);
+        let mut grid1 = Grid::new(3, 3);
+        let grid2 = Grid::new(3, 3);
+        grid1.set(QPos::new(1, 1, Quarter::Nord), QColor::Rouge);
 
         let session1 = Session::new(grid1.clone(), grid1.clone());
         assert!(session1.is_won());
 
         let session2 = Session::new(grid1.clone(), grid2.clone());
         assert!(!session2.is_won());
-
     }
 }
-
-
