@@ -1,6 +1,8 @@
 use crate::logic::colors::QColor;
 use crate::logic::grid::{Grid, QPos, Quarter};
 
+const LEVEL_01: &str = include_str!("../../assets/levels/level_01.txt");
+
 #[derive(Debug, PartialEq)]
 pub enum ParseError {
     UnknownChar,
@@ -63,23 +65,27 @@ pub fn parse_grid(text_grid: &str) -> Result<Grid, ParseError> {
     Ok(grid)
 }
 
-
-
 impl Level {
-        pub fn new(start_grid:Grid, target_grid:Grid) -> Level {
-            Level {
-                start: start_grid,
-                target: target_grid
-            }
+    pub fn new(start_grid: Grid, target_grid: Grid) -> Level {
+        Level {
+            start: start_grid,
+            target: target_grid,
         }
-    pub fn from_text(start_text:&str, target_text:&str) -> Result<Level, ParseError> {
-
+    }
+    pub fn from_text(start_text: &str, target_text: &str) -> Result<Level, ParseError> {
         let start_grid = parse_grid(start_text)?;
         let target_grid = parse_grid(target_text)?;
         Ok(Level {
             start: start_grid,
-            target: target_grid
+            target: target_grid,
         })
+    }
+
+    pub fn from_file_text(text: &str) -> Result<Level, ParseError> {
+        let mut parts = text.split("---");
+        let start = parts.next().ok_or(ParseError::InvalidFormat)?;
+        let target = parts.next().ok_or(ParseError::InvalidFormat)?;
+        Self::from_text(start, target)
     }
 }
 
@@ -87,7 +93,10 @@ impl Level {
 mod test {
     use crate::logic::colors::QColor;
     use crate::logic::grid::{QPos, Quarter};
-    use crate::logic::levels::{ParseError, ParseError::*, parse_cell, parse_grid};
+    use crate::logic::levels::{Level, ParseError, ParseError::*, parse_cell, parse_grid};
+    use crate::logic::rules::is_won;
+
+    const NIVEAU_TEST: &str = "RRRR ....\n.... BBBJ\n---\nRRRR ....\n.... BBBJ";
 
     #[test]
     fn test_parse_cell() {
@@ -122,5 +131,32 @@ mod test {
             parse_grid("R..B R..B\nR..B R..B JJJJ"),
             Err(ParseError::InvalidFormat)
         );
+    }
+
+    #[test]
+    fn test_from_file_text() {
+        let lvl = Level::from_file_text(NIVEAU_TEST).unwrap();
+
+        assert_eq!(
+            &lvl.start.get(QPos::new(0, 0, Quarter::Est)),
+            &Some(QColor::Rouge)
+        );
+
+        assert_eq!(
+            &lvl.start.get(QPos::new(0, 1, Quarter::Est)),
+            &Some(QColor::Empty)
+        );
+
+        assert_eq!(
+            &lvl.target.get(QPos::new(0, 0, Quarter::Est)),
+            &Some(QColor::Rouge)
+        );
+
+        assert_eq!(
+            &lvl.target.get(QPos::new(0, 1, Quarter::Est)),
+            &Some(QColor::Empty)
+        );
+
+        assert!(is_won(&lvl.start, &lvl.target));
     }
 }
