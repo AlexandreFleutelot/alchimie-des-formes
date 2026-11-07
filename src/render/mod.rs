@@ -7,7 +7,6 @@ use crate::game;
 use crate::game::GameSession;
 use crate::render::grid::spawn_grid;
 use crate::render::layout::{current_offset, target_offset};
-use crate::render::shapes::CELL_SIZE;
 use bevy::prelude::*;
 
 pub struct RenderPlugin;
@@ -28,14 +27,14 @@ fn setup(
     commands.spawn(Camera2d);
 
     let session = &game_session.session;
-    let grid_size = session.current().width as f32 * CELL_SIZE;
+    let grid_size = current_offset(session.current().width as f32);
 
     spawn_grid(
         &mut commands,
         &mut meshes,
         &mut materials,
         session.current(),
-        current_offset(grid_size),
+        grid_size,
     );
     spawn_grid(
         &mut commands,
