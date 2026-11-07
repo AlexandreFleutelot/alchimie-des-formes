@@ -1,7 +1,7 @@
 mod colors;
 mod grid;
-mod layout;
-mod shapes;
+pub(crate) mod layout;
+pub(crate) mod shapes;
 
 use crate::game;
 use crate::game::GameSession;
