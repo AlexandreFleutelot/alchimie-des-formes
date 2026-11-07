@@ -1,14 +1,14 @@
 mod colors;
 mod grid;
-mod shapes;
 mod layout;
+mod shapes;
 
 use crate::game;
 use crate::game::GameSession;
 use crate::render::grid::spawn_grid;
+use crate::render::layout::{current_offset, target_offset};
 use crate::render::shapes::CELL_SIZE;
 use bevy::prelude::*;
-use crate::render::layout::{current_offset, target_offset};
 
 pub struct RenderPlugin;
 

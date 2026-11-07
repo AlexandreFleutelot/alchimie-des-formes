@@ -1,6 +1,6 @@
 use bevy::math::Vec2;
 
-pub fn current_offset(width:f32) -> Vec2 {
+pub fn current_offset(width: f32) -> Vec2 {
     Vec2::new(-width - 50., 50.)
 }
 
