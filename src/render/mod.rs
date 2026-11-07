@@ -4,7 +4,7 @@ pub(crate) mod layout;
 pub(crate) mod shapes;
 
 use crate::game;
-use crate::game::GameSession;
+use crate::game::session::GameSession;
 use crate::render::grid::spawn_grid;
 use crate::render::layout::{current_offset, target_offset};
 use bevy::prelude::*;

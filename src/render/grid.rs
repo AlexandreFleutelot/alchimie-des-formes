@@ -1,5 +1,4 @@
-use crate::logic::grid::{Grid, QPos};
-use crate::logic::levels::QUARTERS;
+use crate::logic::grid::{Grid, QPos, Quarter};
 use crate::render::colors::to_color;
 use crate::render::shapes::{CELL_SIZE, quarter_triangle};
 use bevy::mesh::Mesh2d;
@@ -17,7 +16,7 @@ pub fn spawn_grid(
 ) {
     for x in 0..grid.width {
         for y in 0..grid.height {
-            for q in QUARTERS.iter() {
+            for q in Quarter::ALL.iter() {
                 let Some(rgb) = grid.get(QPos::new(x, y, *q)).and_then(to_color) else {
                     continue;
                 };

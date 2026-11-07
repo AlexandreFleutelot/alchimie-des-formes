@@ -9,8 +9,6 @@ pub enum ParseError {
     InvalidFormat,
 }
 
-pub const QUARTERS: [Quarter; 4] = [Quarter::Nord, Quarter::Est, Quarter::Sud, Quarter::Ouest];
-
 pub struct Level {
     pub start: Grid,
     pub target: Grid,
@@ -57,7 +55,7 @@ pub fn parse_grid(text_grid: &str) -> Result<Grid, ParseError> {
         };
         for (x, cell) in ligne.split_whitespace().enumerate() {
             let colors = parse_cell(cell)?;
-            for (q, c) in QUARTERS.iter().zip(colors) {
+            for (q, c) in Quarter::ALL.iter().zip(colors) {
                 grid.set(QPos::new(x, y, *q), c);
             }
         }
