@@ -1,7 +1,7 @@
 use crate::logic::colors::QColor;
 use crate::logic::grid::{Grid, QPos, Quarter};
 
-const LEVEL_01: &str = include_str!("../../assets/levels/level_01.txt");
+pub const LEVEL_01: &str = include_str!("../../assets/levels/level_01.txt");
 
 #[derive(Debug, PartialEq)]
 pub enum ParseError {
@@ -9,7 +9,7 @@ pub enum ParseError {
     InvalidFormat,
 }
 
-const QUARTERS: [Quarter; 4] = [Quarter::Nord, Quarter::Est, Quarter::Sud, Quarter::Ouest];
+pub const QUARTERS: [Quarter; 4] = [Quarter::Nord, Quarter::Est, Quarter::Sud, Quarter::Ouest];
 
 pub struct Level {
     pub start: Grid,
