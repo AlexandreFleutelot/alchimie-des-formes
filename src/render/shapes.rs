@@ -2,7 +2,7 @@ use crate::logic::grid::Quarter;
 use bevy::math::Vec2;
 use bevy::prelude::Triangle2d;
 
-pub const CELL_SIZE: f32 = 20.;
+pub const CELL_SIZE: f32 = 50.;
 
 pub fn quarter_triangle(q: Quarter) -> Triangle2d {
     let mid = Vec2::new(CELL_SIZE / 2., CELL_SIZE / 2.);
