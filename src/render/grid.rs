@@ -26,7 +26,7 @@ pub fn spawn_grid(
                     MeshMaterial2d(materials.add(rgb)),
                     Transform::from_xyz(
                         offset[0] + CELL_SIZE * x as f32,
-                        offset[1] - CELL_SIZE * y as f32,
+                        offset[1] - CELL_SIZE * (y as f32 + 1.), //ajustement coin superieur gauche a offset.
                         0.,
                     ),
                     CellVisual,
