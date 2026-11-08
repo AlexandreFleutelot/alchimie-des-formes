@@ -1,6 +1,8 @@
 mod drag;
 mod keyboard;
 
+pub use drag::cursor_to_world;
+
 use crate::logic::grid::QPos;
 use bevy::prelude::*;
 use drag::drag_piece;
@@ -8,7 +10,7 @@ use keyboard::undo_restart;
 
 #[derive(Resource, Default)]
 pub struct Drag {
-    from: Option<QPos>,
+    pub from: Option<QPos>,
 }
 
 pub struct InputPlugin;

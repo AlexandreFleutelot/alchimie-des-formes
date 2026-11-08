@@ -1,4 +1,5 @@
 mod colors;
+mod ghost;
 mod grid;
 pub(crate) mod layout;
 pub(crate) mod shapes;
@@ -18,7 +19,8 @@ impl Plugin for RenderPlugin {
             .add_systems(
                 Update,
                 redraw_current.run_if(resource_changed::<GameSession>),
-            );
+            )
+            .add_systems(Update, ghost::draw_ghost);
     }
 }
 
