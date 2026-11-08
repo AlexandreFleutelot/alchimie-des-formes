@@ -1,7 +1,14 @@
 use crate::logic::colors::QColor;
 use crate::logic::grid::{Grid, QPos, Quarter};
+use bevy::prelude::*;
 
 pub const LEVEL_01: &str = include_str!("../../assets/levels/level_01.txt");
+pub const LEVEL_02: &str = include_str!("../../assets/levels/level_02.txt");
+
+pub const LEVELS: [&str; 2] = [LEVEL_01, LEVEL_02];
+
+#[derive(Resource, Default)]
+pub struct CurrentLevel(pub usize);
 
 #[derive(Debug, PartialEq)]
 pub enum ParseError {
