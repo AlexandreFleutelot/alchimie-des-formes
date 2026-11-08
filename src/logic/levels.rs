@@ -8,7 +8,9 @@ pub const LEVEL_02: &str = include_str!("../../assets/levels/level_02.txt");
 pub const LEVELS: [&str; 2] = [LEVEL_01, LEVEL_02];
 
 #[derive(Resource, Default)]
-pub struct CurrentLevel(pub usize);
+pub struct CurrentLevel {
+    pub index: usize,
+}
 
 #[derive(Debug, PartialEq)]
 pub enum ParseError {
