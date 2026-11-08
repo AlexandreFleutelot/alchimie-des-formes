@@ -15,6 +15,7 @@ pub fn undo_restart(
     } else if keys.just_pressed(KeyCode::KeyN) {
         current_level.index = (current_level.index + 1) % LEVELS.len();
         *game_session = GameSession::new_from_level(current_level.index);
+        drag.from = None;
     } else if keys.just_pressed(KeyCode::KeyU) {
         let _ = game_session.session.undo();
         drag.from = None;
