@@ -1,5 +1,6 @@
 use crate::game::session::GameSession;
 use crate::input::{Drag, cursor_to_world};
+use crate::logic::fission::{Movement, move_piece};
 use crate::render::layout::current_offset;
 use crate::render::shapes::{CELL_SIZE, quarter_triangle, world_to_qpos};
 use bevy::prelude::*;
@@ -35,13 +36,22 @@ pub fn draw_ghost(
         return;
     };
 
-    let dx = to.x as f32 - from.x as f32;
-    let dy = to.y as f32 - from.y as f32;
+    let m = Movement {
+        dx: to.x as i32 - from.x as i32,
+        dy: to.y as i32 - from.y as i32,
+    };
+    let color = if move_piece(grid, from, m).is_ok() {
+        Color::srgba(1., 1., 1., 0.5)
+    } else {
+        Color::srgba(1., 0., 0., 0.5)
+    };
+    let dx = m.dx as f32;
+    let dy = m.dy as f32;
 
     for p in grid.get_piece(from) {
         commands.spawn((
             Mesh2d(meshes.add(quarter_triangle(p.q))),
-            MeshMaterial2d(materials.add(Color::srgba(1., 1., 1., 0.5))),
+            MeshMaterial2d(materials.add(color)),
             Transform::from_xyz(
                 offset.x + CELL_SIZE * (p.x as f32 + dx),
                 offset.y - CELL_SIZE * (p.y as f32 + dy + 1.),
