@@ -7,9 +7,16 @@ pub struct GameSession {
     pub session: Session,
 }
 
-pub(crate) fn load_session(mut commands: Commands) {
-    let lvl = Level::from_file_text(LEVEL_01).expect("Can't to load level 01");
-    commands.insert_resource(GameSession {
-        session: Session::new(lvl.start, lvl.target),
-    });
+impl GameSession {
+
+    pub fn new_from_level() -> Self {
+        let lvl = Level::from_file_text(LEVEL_01).expect("Can't to load level 01");
+        GameSession {
+            session: Session::new(lvl.start, lvl.target),
+        }
+    }
+}
+
+pub fn load_session(mut commands: Commands) {
+    commands.insert_resource(GameSession::new_from_level());
 }
