@@ -2,6 +2,7 @@ mod colors;
 mod ghost;
 mod grid;
 mod hud;
+mod outline;
 pub(crate) mod layout;
 mod screens;
 pub(crate) mod shapes;
@@ -27,7 +28,8 @@ impl Plugin for RenderPlugin {
             .add_systems(
                 Update,
                 ghost::draw_ghost.run_if(in_state(AppState::Playing)),
-            );
+            )
+            .add_systems(Update, outline::draw_outlines);
     }
 }
 
