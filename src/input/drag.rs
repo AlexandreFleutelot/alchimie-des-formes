@@ -17,7 +17,7 @@ pub fn drag_piece(
     mut next_state: ResMut<NextState<AppState>>,
 ) -> Result {
     let (camera, camera_transform) = camera.into_inner();
-    let offset = current_offset(game_session.session.current().width as f32);
+    let offset = current_offset(game_session.session.current());
 
     if mouse.just_pressed(MouseButton::Left) {
         let Some(world_point) = cursor_to_world(*window, camera, camera_transform) else {

@@ -13,6 +13,14 @@ pub const LEVEL_05: &str = include_str!("../../assets/levels/level_05.txt");
 
 pub const LEVELS: [&str; 5] = [LEVEL_01, LEVEL_02, LEVEL_03, LEVEL_04, LEVEL_05];
 
+pub const HINTS: [&str; LEVELS.len()] = [
+    "Drag a piece onto another to mix their colors",
+    "Position matters: drop each piece where the target needs it",
+    "A triangle keeps its orientation when you move it",
+    "Pieces that touch stick together, mind the order! Red over blue makes violet",
+    "Yellow over red makes orange. Pieces that touch stick together",
+];
+
 #[derive(Resource, Default)]
 pub struct CurrentLevel {
     pub index: usize,

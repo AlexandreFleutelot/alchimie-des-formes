@@ -31,7 +31,7 @@ pub fn draw_ghost(
         return;
     };
     let grid = game_session.session.current();
-    let offset = current_offset(grid.width as f32);
+    let offset = current_offset(grid);
     let cell_x = ((point.x - offset.x) / CELL_SIZE).floor() as i32;
     let cell_y = ((offset.y - point.y) / CELL_SIZE).floor() as i32;
 

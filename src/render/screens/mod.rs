@@ -7,6 +7,6 @@ pub struct ScreensPlugin;
 
 impl Plugin for ScreensPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(OnEnter(AppState::Won), win::show_win_text);
+        app.add_systems(OnEnter(AppState::Won), win::show_win_screen);
     }
 }

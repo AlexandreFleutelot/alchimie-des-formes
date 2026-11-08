@@ -5,10 +5,7 @@ use bevy::mesh::Mesh2d;
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct CurrentVisual;
-
-#[derive(Component)]
-pub struct TargetVisual;
+pub struct GridVisual;
 
 pub fn spawn_grid(
     commands: &mut Commands,
@@ -16,15 +13,25 @@ pub fn spawn_grid(
     materials: &mut Assets<ColorMaterial>,
     grid: &Grid,
     offset: Vec2,
-    current: bool,
+    label: &str,
 ) {
+    commands.spawn((
+        Text2d::new(label),
+        TextFont {
+            font_size: FontSize::Px(24.0),
+            ..default()
+        },
+        Transform::from_xyz(offset.x + grid.width as f32 * CELL_SIZE / 2., offset.y + 25., 0.),
+        GridVisual,
+    ));
+
     for x in 0..grid.width {
         for y in 0..grid.height {
             for q in Quarter::ALL.iter() {
                 let Some(rgb) = grid.get(QPos::new(x, y, *q)).and_then(to_color) else {
                     continue;
                 };
-                let mut entity = commands.spawn((
+                commands.spawn((
                     Mesh2d(meshes.add(quarter_triangle(*q))),
                     MeshMaterial2d(materials.add(rgb)),
                     Transform::from_xyz(
@@ -32,12 +39,8 @@ pub fn spawn_grid(
                         offset[1] - CELL_SIZE * (y as f32 + 1.), //ajustement coin superieur gauche a offset.
                         0.,
                     ),
+                    GridVisual,
                 ));
-                if current {
-                    entity.insert(CurrentVisual);
-                } else {
-                    entity.insert(TargetVisual);
-                }
             }
         }
     }

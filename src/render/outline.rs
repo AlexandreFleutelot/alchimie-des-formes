@@ -12,9 +12,14 @@ pub fn draw_outlines(mut gizmos: Gizmos, game_session: Res<GameSession>) {
         &mut gizmos,
         current.width,
         current.height,
-        current_offset(current.width as f32),
+        current_offset(current),
     );
-    draw_grid_lines(&mut gizmos, target.width, target.height, target_offset());
+    draw_grid_lines(
+        &mut gizmos,
+        target.width,
+        target.height,
+        target_offset(target),
+    );
 }
 
 fn draw_grid_lines(gizmos: &mut Gizmos, width: usize, height: usize, offset: Vec2) {
