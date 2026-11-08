@@ -5,6 +5,7 @@ pub(crate) mod layout;
 pub(crate) mod shapes;
 
 use crate::game;
+use crate::game::AppState;
 use crate::game::session::GameSession;
 use crate::render::grid::{CurrentVisual, TargetVisual, spawn_grid};
 use crate::render::layout::{current_offset, target_offset};
@@ -20,7 +21,10 @@ impl Plugin for RenderPlugin {
                 Update,
                 redraw_current.run_if(resource_changed::<GameSession>),
             )
-            .add_systems(Update, ghost::draw_ghost);
+            .add_systems(
+                Update,
+                ghost::draw_ghost.run_if(in_state(AppState::Playing)),
+            );
     }
 }
 
