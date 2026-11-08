@@ -7,6 +7,9 @@ use bevy::prelude::*;
 #[derive(Component)]
 pub struct CurrentVisual;
 
+#[derive(Component)]
+pub struct TargetVisual;
+
 pub fn spawn_grid(
     commands: &mut Commands,
     meshes: &mut Assets<Mesh>,
@@ -32,6 +35,8 @@ pub fn spawn_grid(
                 ));
                 if current {
                     entity.insert(CurrentVisual);
+                } else {
+                    entity.insert(TargetVisual);
                 }
             }
         }

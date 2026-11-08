@@ -6,7 +6,7 @@ pub(crate) mod shapes;
 
 use crate::game;
 use crate::game::session::GameSession;
-use crate::render::grid::{CurrentVisual, spawn_grid};
+use crate::render::grid::{CurrentVisual, TargetVisual, spawn_grid};
 use crate::render::layout::{current_offset, target_offset};
 use bevy::prelude::*;
 
@@ -24,14 +24,20 @@ impl Plugin for RenderPlugin {
     }
 }
 
-fn setup(
+fn setup(mut commands: Commands) {
+    commands.spawn(Camera2d);
+}
+
+fn redraw_current(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<ColorMaterial>>,
     game_session: Res<GameSession>,
+    visuals: Query<Entity, Or<(With<CurrentVisual>, With<TargetVisual>)>>,
 ) {
-    commands.spawn(Camera2d);
-
+    for e in &visuals {
+        commands.entity(e).despawn();
+    }
     spawn_grid(
         &mut commands,
         &mut meshes,
@@ -40,18 +46,6 @@ fn setup(
         target_offset(),
         false,
     );
-}
-
-fn redraw_current(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-    game_session: Res<GameSession>,
-    visuals: Query<Entity, With<CurrentVisual>>,
-) {
-    for e in &visuals {
-        commands.entity(e).despawn();
-    }
     let current = game_session.session.current();
     spawn_grid(
         &mut commands,
