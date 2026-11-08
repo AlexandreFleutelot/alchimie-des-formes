@@ -1,8 +1,9 @@
 mod colors;
 mod ghost;
 mod grid;
-mod screens;
+mod hud;
 pub(crate) mod layout;
+mod screens;
 pub(crate) mod shapes;
 
 use crate::game;
@@ -17,7 +18,7 @@ pub struct RenderPlugin;
 impl Plugin for RenderPlugin {
     fn build(&self, app: &mut App) {
         println!("RenderPlugin build");
-        app.add_systems(Startup, setup.after(game::load_session))
+        app.add_systems(Startup, (setup.after(game::load_session), hud::setup_hud))
             .add_plugins(screens::ScreensPlugin)
             .add_systems(
                 Update,
