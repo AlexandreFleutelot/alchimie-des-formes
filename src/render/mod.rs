@@ -1,6 +1,7 @@
 mod colors;
 mod ghost;
 mod grid;
+mod win;
 pub(crate) mod layout;
 pub(crate) mod shapes;
 
@@ -17,6 +18,7 @@ impl Plugin for RenderPlugin {
     fn build(&self, app: &mut App) {
         println!("RenderPlugin build");
         app.add_systems(Startup, setup.after(game::load_session))
+            .add_systems(OnEnter(AppState::Won), win::show_win_text)
             .add_systems(
                 Update,
                 redraw_current.run_if(resource_changed::<GameSession>),
