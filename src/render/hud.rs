@@ -17,7 +17,7 @@ pub fn setup_hud(mut commands: Commands) {
     ));
 
     commands.spawn((
-        Text::new("Glisser : déplacer\nU : annuler\nR : recommencer"),
+        Text::new("Drag : move\nU : undo\nR : restart level"),
         TextFont {
             font_size: FontSize::Px(20.0),
             ..default()
