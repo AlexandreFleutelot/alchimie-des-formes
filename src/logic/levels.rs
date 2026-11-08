@@ -5,7 +5,13 @@ use bevy::prelude::*;
 pub const LEVEL_01: &str = include_str!("../../assets/levels/level_01.txt");
 pub const LEVEL_02: &str = include_str!("../../assets/levels/level_02.txt");
 
-pub const LEVELS: [&str; 2] = [LEVEL_01, LEVEL_02];
+pub const LEVEL_03: &str = include_str!("../../assets/levels/level_03.txt");
+
+pub const LEVEL_04: &str = include_str!("../../assets/levels/level_04.txt");
+
+pub const LEVEL_05: &str = include_str!("../../assets/levels/level_05.txt");
+
+pub const LEVELS: [&str; 5] = [LEVEL_01, LEVEL_02, LEVEL_03, LEVEL_04, LEVEL_05];
 
 #[derive(Resource, Default)]
 pub struct CurrentLevel {
