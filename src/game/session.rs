@@ -8,7 +8,6 @@ pub struct GameSession {
 }
 
 impl GameSession {
-
     pub fn new_from_level() -> Self {
         let lvl = Level::from_file_text(LEVEL_01).expect("Can't to load level 01");
         GameSession {
