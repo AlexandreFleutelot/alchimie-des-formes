@@ -2,16 +2,16 @@ mod colors;
 mod ghost;
 mod grid;
 mod hud;
-mod outline;
 pub(crate) mod layout;
+mod outline;
 mod screens;
 pub(crate) mod shapes;
 
 use crate::game;
 use crate::game::AppState;
 use crate::game::session::GameSession;
-use crate::render::grid::{GridVisual, spawn_grid};
 use crate::logic::levels::CurrentLevel;
+use crate::render::grid::{GridVisual, spawn_grid};
 use crate::render::layout::{current_offset, target_offset};
 use bevy::prelude::*;
 
@@ -22,10 +22,7 @@ impl Plugin for RenderPlugin {
         println!("RenderPlugin build");
         app.add_systems(Startup, (setup.after(game::load_session), hud::setup_hud))
             .add_plugins(screens::ScreensPlugin)
-            .add_systems(
-                Update,
-                redraw_grids.run_if(resource_changed::<GameSession>),
-            )
+            .add_systems(Update, redraw_grids.run_if(resource_changed::<GameSession>))
             .add_systems(
                 Update,
                 ghost::draw_ghost.run_if(in_state(AppState::Playing)),

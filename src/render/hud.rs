@@ -73,11 +73,9 @@ pub fn setup_hud(mut commands: Commands) {
 pub fn update_hud_texts(current_level: Res<CurrentLevel>, mut texts: Query<(&mut Text, &HudText)>) {
     for (mut text, kind) in &mut texts {
         *text = match kind {
-            HudText::Level => Text::new(format!(
-                "Level {}/{}",
-                current_level.index + 1,
-                HINTS.len()
-            )),
+            HudText::Level => {
+                Text::new(format!("Level {}/{}", current_level.index + 1, HINTS.len()))
+            }
             HudText::Hint => Text::new(HINTS[current_level.index]),
         };
     }

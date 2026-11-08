@@ -87,12 +87,6 @@ pub fn parse_grid(text_grid: &str) -> Result<Grid, ParseError> {
 }
 
 impl Level {
-    pub fn new(start_grid: Grid, target_grid: Grid) -> Level {
-        Level {
-            start: start_grid,
-            target: target_grid,
-        }
-    }
     pub fn from_text(start_text: &str, target_text: &str) -> Result<Level, ParseError> {
         let start_grid = parse_grid(start_text)?;
         let target_grid = parse_grid(target_text)?;

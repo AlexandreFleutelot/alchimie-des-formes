@@ -21,7 +21,11 @@ pub fn spawn_grid(
             font_size: FontSize::Px(24.0),
             ..default()
         },
-        Transform::from_xyz(offset.x + grid.width as f32 * CELL_SIZE / 2., offset.y + 25., 0.),
+        Transform::from_xyz(
+            offset.x + grid.width as f32 * CELL_SIZE / 2.,
+            offset.y + 25.,
+            0.,
+        ),
         GridVisual,
     ));
 
