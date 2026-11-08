@@ -2,7 +2,7 @@ use crate::game::session::GameSession;
 use crate::input::{Drag, cursor_to_world};
 use crate::logic::fission::{Movement, move_piece};
 use crate::render::layout::current_offset;
-use crate::render::shapes::{CELL_SIZE, quarter_triangle, world_to_qpos};
+use crate::render::shapes::{CELL_SIZE, quarter_triangle};
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
@@ -32,13 +32,12 @@ pub fn draw_ghost(
     };
     let grid = game_session.session.current();
     let offset = current_offset(grid.width as f32);
-    let Some(to) = world_to_qpos(grid, point, offset) else {
-        return;
-    };
+    let cell_x = ((point.x - offset.x) / CELL_SIZE).floor() as i32;
+    let cell_y = ((offset.y - point.y) / CELL_SIZE).floor() as i32;
 
     let m = Movement {
-        dx: to.x as i32 - from.x as i32,
-        dy: to.y as i32 - from.y as i32,
+        dx: cell_x - from.x as i32,
+        dy: cell_y - from.y as i32,
     };
     let color = if move_piece(grid, from, m).is_ok() {
         Color::srgba(1., 1., 1., 0.5)
