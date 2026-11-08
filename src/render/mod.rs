@@ -5,7 +5,7 @@ pub(crate) mod shapes;
 
 use crate::game;
 use crate::game::session::GameSession;
-use crate::render::grid::spawn_grid;
+use crate::render::grid::{CurrentVisual, spawn_grid};
 use crate::render::layout::{current_offset, target_offset};
 use bevy::prelude::*;
 
@@ -14,7 +14,11 @@ pub struct RenderPlugin;
 impl Plugin for RenderPlugin {
     fn build(&self, app: &mut App) {
         println!("RenderPlugin build");
-        app.add_systems(Startup, setup.after(game::load_session));
+        app.add_systems(Startup, setup.after(game::load_session))
+            .add_systems(
+                Update,
+                redraw_current.run_if(resource_changed::<GameSession>),
+            );
     }
 }
 
@@ -26,21 +30,33 @@ fn setup(
 ) {
     commands.spawn(Camera2d);
 
-    let session = &game_session.session;
-    let grid_size = current_offset(session.current().width as f32);
-
     spawn_grid(
         &mut commands,
         &mut meshes,
         &mut materials,
-        session.current(),
-        grid_size,
-    );
-    spawn_grid(
-        &mut commands,
-        &mut meshes,
-        &mut materials,
-        session.target(),
+        game_session.session.target(),
         target_offset(),
+        false,
+    );
+}
+
+fn redraw_current(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+    game_session: Res<GameSession>,
+    visuals: Query<Entity, With<CurrentVisual>>,
+) {
+    for e in &visuals {
+        commands.entity(e).despawn();
+    }
+    let current = game_session.session.current();
+    spawn_grid(
+        &mut commands,
+        &mut meshes,
+        &mut materials,
+        current,
+        current_offset(current.width as f32),
+        true,
     );
 }

@@ -64,9 +64,13 @@ pub fn drag_piece(
 
         let m = Movement { dx, dy };
         println!("{:?} -> {:?}", from, m);
-        if let Err(e) = game_session.session.play(from, m) {println!("Move error: {:?}", e)};
+        if let Err(e) = game_session.session.play(from, m) {
+            println!("Move error: {:?}", e)
+        };
 
-        if game_session.session.is_won() { println!("Game win!") }
+        if game_session.session.is_won() {
+            println!("Game win!")
+        }
     }
     Ok(())
 }

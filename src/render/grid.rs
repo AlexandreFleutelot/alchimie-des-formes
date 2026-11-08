@@ -5,7 +5,7 @@ use bevy::mesh::Mesh2d;
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct CellVisual;
+pub struct CurrentVisual;
 
 pub fn spawn_grid(
     commands: &mut Commands,
@@ -13,6 +13,7 @@ pub fn spawn_grid(
     materials: &mut Assets<ColorMaterial>,
     grid: &Grid,
     offset: Vec2,
+    current: bool,
 ) {
     for x in 0..grid.width {
         for y in 0..grid.height {
@@ -20,7 +21,7 @@ pub fn spawn_grid(
                 let Some(rgb) = grid.get(QPos::new(x, y, *q)).and_then(to_color) else {
                     continue;
                 };
-                commands.spawn((
+                let mut entity = commands.spawn((
                     Mesh2d(meshes.add(quarter_triangle(*q))),
                     MeshMaterial2d(materials.add(rgb)),
                     Transform::from_xyz(
@@ -28,8 +29,10 @@ pub fn spawn_grid(
                         offset[1] - CELL_SIZE * (y as f32 + 1.), //ajustement coin superieur gauche a offset.
                         0.,
                     ),
-                    CellVisual,
                 ));
+                if current {
+                    entity.insert(CurrentVisual);
+                }
             }
         }
     }

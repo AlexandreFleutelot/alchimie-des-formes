@@ -1,1 +1,7 @@
 /target
+
+# Build WASM (généré)
+wasm/bevy_game*
+wasm/assets/
+*.zip
+.DS_Store
