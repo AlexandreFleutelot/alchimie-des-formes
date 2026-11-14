@@ -1,5 +1,5 @@
 use super::Drag;
-use crate::game::AppState;
+use crate::game::GamePhase;
 use crate::game::session::GameSession;
 use crate::logic::colors::QColor;
 use crate::logic::fission::Movement;
@@ -14,7 +14,7 @@ pub fn drag_piece(
     camera: Single<(&Camera, &GlobalTransform)>,
     mut game_session: ResMut<GameSession>,
     mut drag: ResMut<Drag>,
-    mut next_state: ResMut<NextState<AppState>>,
+    mut next_state: ResMut<NextState<GamePhase>>,
 ) -> Result {
     let (camera, camera_transform) = camera.into_inner();
     let offset = current_offset(game_session.session.current());
@@ -58,7 +58,7 @@ pub fn drag_piece(
         };
 
         if game_session.session.is_won() {
-            next_state.set(AppState::Won);
+            next_state.set(GamePhase::Won);
         }
     }
     Ok(())

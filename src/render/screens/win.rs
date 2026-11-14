@@ -1,4 +1,4 @@
-use crate::game::AppState;
+use crate::game::GamePhase;
 use crate::logic::levels::{CurrentLevel, LEVELS};
 use bevy::prelude::*;
 
@@ -19,7 +19,7 @@ pub fn show_win_screen(mut commands: Commands, current_level: Res<CurrentLevel>)
             ..default()
         },
         BackgroundColor(Color::srgba(0., 0., 0., 0.6)),
-        DespawnOnExit(AppState::Won),
+        DespawnOnExit(GamePhase::Won),
         children![(
             Text::new(message),
             TextFont {

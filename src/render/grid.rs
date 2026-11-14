@@ -3,6 +3,7 @@ use crate::render::colors::to_color;
 use crate::render::shapes::{CELL_SIZE, quarter_triangle};
 use bevy::mesh::Mesh2d;
 use bevy::prelude::*;
+use crate::game::AppState;
 
 #[derive(Component)]
 pub struct GridVisual;
@@ -27,6 +28,7 @@ pub fn spawn_grid(
             0.,
         ),
         GridVisual,
+        DespawnOnExit(AppState::InGame)
     ));
 
     for x in 0..grid.width {
@@ -44,6 +46,7 @@ pub fn spawn_grid(
                         0.,
                     ),
                     GridVisual,
+                    DespawnOnExit(AppState::InGame)
                 ));
             }
         }

@@ -7,10 +7,8 @@ mod outline;
 mod screens;
 pub(crate) mod shapes;
 
-use crate::game;
-use crate::game::AppState;
+use crate::game::{AppState, GamePhase};
 use crate::game::session::GameSession;
-use crate::logic::levels::CurrentLevel;
 use crate::render::grid::{GridVisual, spawn_grid};
 use crate::render::layout::{current_offset, target_offset};
 use bevy::prelude::*;
@@ -20,18 +18,24 @@ pub struct RenderPlugin;
 impl Plugin for RenderPlugin {
     fn build(&self, app: &mut App) {
         println!("RenderPlugin build");
-        app.add_systems(Startup, (setup.after(game::load_session), hud::setup_hud))
+        app.add_systems(Startup,setup)
+            .add_systems(OnEnter(AppState::InGame), hud::setup_hud)
+            //add_systems(Startup, (setup.after(game::load_session), hud::setup_hud))
             .add_plugins(screens::ScreensPlugin)
-            .add_systems(Update, redraw_grids.run_if(resource_changed::<GameSession>))
             .add_systems(
                 Update,
-                ghost::draw_ghost.run_if(in_state(AppState::Playing)),
+                redraw_grids.run_if(resource_changed::<GameSession>.and_then(in_state(AppState::InGame))),
             )
-            .add_systems(Update, outline::draw_outlines)
             .add_systems(
                 Update,
-                hud::update_hud_texts.run_if(resource_changed::<CurrentLevel>),
-            );
+                ghost::draw_ghost.run_if(in_state(GamePhase::Playing)),
+            )
+            .add_systems(Update, outline::draw_outlines.run_if(in_state(AppState::InGame)))
+            // .add_systems(
+            //     Update,
+            //     hud::update_hud_texts.run_if(resource_changed::<CurrentLevel>.and_then(in_state(AppState::InGame))),
+            // )
+            .add_systems(OnEnter(AppState::InGame), hud::update_hud_texts.after(hud::setup_hud));
     }
 }
 

@@ -1,5 +1,6 @@
 use crate::logic::levels::{CurrentLevel, HINTS};
 use bevy::prelude::*;
+use crate::game::AppState;
 
 #[derive(Component)]
 pub enum HudText {
@@ -21,6 +22,7 @@ pub fn setup_hud(mut commands: Commands) {
             width: Val::Percent(100.0),
             ..default()
         },
+        DespawnOnExit(AppState::InGame),
     ));
 
     commands.spawn((
@@ -37,6 +39,7 @@ pub fn setup_hud(mut commands: Commands) {
             ..default()
         },
         HudText::Level,
+        DespawnOnExit(AppState::InGame)
     ));
 
     commands.spawn((
@@ -53,6 +56,7 @@ pub fn setup_hud(mut commands: Commands) {
             ..default()
         },
         HudText::Hint,
+        DespawnOnExit(AppState::InGame)
     ));
 
     commands.spawn((
@@ -67,6 +71,7 @@ pub fn setup_hud(mut commands: Commands) {
             left: Val::Px(20.0),
             ..default()
         },
+        DespawnOnExit(AppState::InGame)
     ));
 }
 
