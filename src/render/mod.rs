@@ -25,7 +25,7 @@ impl Plugin for RenderPlugin {
             .add_systems(
                 Update,
                 redraw_grids
-                    .run_if(resource_changed::<GameSession>.and_then(in_state(AppState::InGame))),
+                    .run_if(in_state(AppState::InGame).and_then(resource_changed::<GameSession>)),
             )
             .add_systems(
                 Update,
@@ -35,10 +35,6 @@ impl Plugin for RenderPlugin {
                 Update,
                 outline::draw_outlines.run_if(in_state(AppState::InGame)),
             )
-            // .add_systems(
-            //     Update,
-            //     hud::update_hud_texts.run_if(resource_changed::<CurrentLevel>.and_then(in_state(AppState::InGame))),
-            // )
             .add_systems(
                 OnEnter(AppState::InGame),
                 hud::update_hud_texts.after(hud::setup_hud),
