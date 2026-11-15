@@ -9,6 +9,7 @@ pub(crate) mod shapes;
 
 use crate::game::session::GameSession;
 use crate::game::{AppState, GamePhase};
+use crate::logic::levels::CurrentLevel;
 use crate::render::grid::{GridVisual, spawn_grid};
 use crate::render::layout::{current_offset, target_offset};
 use bevy::prelude::*;
@@ -38,6 +39,11 @@ impl Plugin for RenderPlugin {
             .add_systems(
                 OnEnter(AppState::InGame),
                 hud::update_hud_texts.after(hud::setup_hud),
+            )
+            .add_systems(
+                Update,
+                hud::update_hud_texts
+                    .run_if(in_state(AppState::InGame).and_then(resource_changed::<CurrentLevel>)),
             );
     }
 }

@@ -1,5 +1,5 @@
 mod level_select;
-mod menu;
+pub mod menu;
 mod win;
 
 use crate::{
