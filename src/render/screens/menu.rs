@@ -1,4 +1,5 @@
 use crate::game::AppState;
+use bevy::color::Luminance;
 use bevy::prelude::*;
 use bevy::ui_widgets::Button as UiButton;
 
@@ -44,9 +45,25 @@ pub fn menu_button(label: impl Into<String>, color: Color) -> impl Scene {
             padding: UiRect::axes(Val::Px(36.0), Val::Px(16.0)),
         }
         BackgroundColor(color)
+        @hover_color(color)
         Children [
             Text(label)
             TextFont { font_size: FontSize::Px(28.0) }
         ]
+    }
+}
+
+pub fn hover_color(color: Color) -> impl Scene {
+    bsn! {
+        on(move |ev: On<PointerEnter>, mut bgs: Query<&mut BackgroundColor>| {
+            if let Ok(mut bg) = bgs.get_mut(ev.entity) {
+                bg.0 = color.lighter(0.15);
+            }
+        })
+        on(move |ev: On<PointerLeave>, mut bgs: Query<&mut BackgroundColor>| {
+            if let Ok(mut bg) = bgs.get_mut(ev.entity) {
+                bg.0 = color;
+            }
+        })
     }
 }

@@ -4,7 +4,7 @@ use bevy::ui_widgets::Button as UiButton;
 use crate::{
     game::AppState,
     logic::levels::{CurrentLevel, LEVELS},
-    render::screens::menu::menu_button,
+    render::screens::menu::{hover_color, menu_button},
 };
 
 pub fn show_level_select_screen(mut commands: Commands) {
@@ -60,7 +60,7 @@ fn level_button(level_index: usize) -> impl Scene {
               align_items: AlignItems::Center,
           }
           BackgroundColor(Color::srgb(0.2, 0.45, 0.8))
-
+          @hover_color(Color::srgb(0.2, 0.45, 0.8))
           on(move |_: On<PointerClick>, mut current_level:ResMut<CurrentLevel>, mut next_state:ResMut<NextState<AppState>>| {
               current_level.index = level_index;
               next_state.set(AppState::InGame);
