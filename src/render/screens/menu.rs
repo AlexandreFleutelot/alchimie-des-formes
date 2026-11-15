@@ -22,18 +22,31 @@ pub fn show_menu_screen(mut commands: Commands) {
             TextFont { font_size: FontSize::Px(56.0) }
             --
             #PlayButton
-            UiButton
-            Node {
-                padding: UiRect::axes(Val::Px(36.0), Val::Px(16.0)),
-            }
-            BackgroundColor(Color::srgb(0.2, 0.45, 0.8))
+            @menu_button("Play", Color::srgb(0.2, 0.7, 0.2))
             on(|_: On<PointerClick>, mut next_state: ResMut<NextState<AppState>>| {
                 next_state.set(AppState::InGame);
             })
-            Children [
-                Text("Jouer")
-                TextFont { font_size: FontSize::Px(28.0) }
-            ]
+            --
+            #LevelSelectButton
+            @menu_button("Levels", Color::srgb(0.2, 0.45, 0.8))
+            on(|_: On<PointerClick>, mut next_state: ResMut<NextState<AppState>>| {
+                next_state.set(AppState::LevelSelect);
+            })
         ]
     });
+}
+
+pub fn menu_button(label: impl Into<String>, color: Color) -> impl Scene {
+    let label = label.into();
+    bsn! {
+        UiButton
+        Node {
+            padding: UiRect::axes(Val::Px(36.0), Val::Px(16.0)),
+        }
+        BackgroundColor(color)
+        Children [
+            Text(label)
+            TextFont { font_size: FontSize::Px(28.0) }
+        ]
+    }
 }
