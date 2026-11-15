@@ -1,6 +1,6 @@
 use super::Drag;
-use crate::game::GamePhase;
 use crate::game::session::GameSession;
+use crate::game::{AppState, GamePhase};
 use crate::logic::levels::{CurrentLevel, LEVELS};
 use bevy::prelude::*;
 
@@ -17,25 +17,29 @@ pub fn next_level_on_win(
     }
 }
 
-pub fn undo_restart(
+pub fn keyboard_commands(
     keys: Res<ButtonInput<KeyCode>>,
     mut game_session: ResMut<GameSession>,
     mut current_level: ResMut<CurrentLevel>,
     mut drag: ResMut<Drag>,
-    mut next_state: ResMut<NextState<GamePhase>>,
+    mut next_phase: ResMut<NextState<GamePhase>>,
+    mut next_app_state: ResMut<NextState<AppState>>,
 ) {
     if keys.just_pressed(KeyCode::KeyR) {
         *game_session = GameSession::new_from_level(current_level.index);
         drag.from = None;
-        next_state.set(GamePhase::Playing);
+        next_phase.set(GamePhase::Playing);
     } else if keys.just_pressed(KeyCode::KeyN) {
         current_level.index = (current_level.index + 1) % LEVELS.len();
         *game_session = GameSession::new_from_level(current_level.index);
         drag.from = None;
-        next_state.set(GamePhase::Playing);
+        next_phase.set(GamePhase::Playing);
     } else if keys.just_pressed(KeyCode::KeyU) {
         let _ = game_session.session.undo();
         drag.from = None;
-        next_state.set(GamePhase::Playing);
+        next_phase.set(GamePhase::Playing);
+    } else if keys.just_pressed(KeyCode::Escape) {
+        drag.from = None;
+        next_app_state.set(AppState::Menu);
     }
 }
